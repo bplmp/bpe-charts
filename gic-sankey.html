@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>GiC Sankey Diagram - BPE</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+<body>
+  <div id="sankey" style="width: 100%; height: 100%;"></div>
+  <script type="text/javascript">
+    google.charts.load('current', {
+      'packages': ['sankey']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'From');
+      data.addColumn('string', 'To');
+      data.addColumn('number', 'Tons Per Year');
+      data.addRows([
+        ['Container Glass', 'MRF', 3.3],
+        ['MRF', 'Small Glass', 1.1],
+        ['MRF', 'Large Glass', 2.2],
+        ['Small Glass', 'Potential Glass Pozzolan', 1.1],
+        ['Large Glass', 'Potential Glass Pozzolan', 2.2],
+        ['E-Glass', 'Potential Glass Pozzolan', 0.2],
+        ['Plate Glass', 'Potential Glass Pozzolan', 0.5],
+        ['Container Glass', 'Landfill & Other Uses', 8.5],
+        ['E-Glass', 'Landfill & Other Uses', 0.6],
+        ['Plate Glass', 'Landfill & Other Uses', 4.5],
+        // *0.9 is converting short ton to metric ton:
+        // [ 'Fly & Bottom Ash', 'Cement Replacement', (14.4+0.5)*0.9 ],
+        ['Fly Ash', 'Cement Replacement', (14.4) * 0.9],
+        ['Bottom Ash', 'Cement Replacement', (0.5) * 0.9],
+        // [ 'Fly & Bottom Ash', 'Other Uses', (23.4+9.6)*0.9 ],
+        ['Iron and Steel Slag', 'Cement Replacement & Other Uses', 16.0],
+      ]);
+
+      // Sets chart options.
+      var colors = [
+        '#0BD1AE',
+        '#ec7c04',
+        '#ec7c04',
+        '#ec7c04',
+        '#ec7c04',
+        '#0BD1AE',
+        '#0BD1AE',
+        '#555',
+        '#555',
+        '#555',
+        '#555',
+        '#555',
+        '#555',
+      ];
+
+      var options = {
+        height: 400,
+        sankey: {
+          node: {
+            colors: colors
+          },
+          link: {
+            colorMode: 'gradient',
+            colors: colors
+          }
+        }
+      };
+
+      // Instantiates and draws our chart, passing in some options.
+      var chart = new google.visualization.Sankey(document.getElementById('sankey'));
+      chart.draw(data, options);
+    }
+  </script>
+</body>
+
+</html>
