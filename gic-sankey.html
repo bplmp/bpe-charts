@@ -19,7 +19,7 @@
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'From');
       data.addColumn('string', 'To');
-      data.addColumn('number', 'Tons Per Year');
+      data.addColumn('number', 'Million Metric Tons Per Year');
       data.addRows([
         ['Container Glass', 'MRF', 3.3],
         ['MRF', 'Small Glass', 1.1],
@@ -36,7 +36,8 @@
         ['Fly Ash', 'Cement Replacement', (14.4) * 0.9],
         ['Bottom Ash', 'Cement Replacement', (0.5) * 0.9],
         // [ 'Fly & Bottom Ash', 'Other Uses', (23.4+9.6)*0.9 ],
-        ['Iron and Steel Slag', 'Cement Replacement & Other Uses', 16.0],
+        ['Iron and Steel Slag', 'Cement Replacement', 2.7],
+        ['Iron and Steel Slag', 'Other Uses', 13.3],
       ]);
 
       // Sets chart options.
@@ -60,7 +61,8 @@
         height: 400,
         sankey: {
           node: {
-            colors: colors
+            colors: colors,
+            fontName: 'proxima-nova'
           },
           link: {
             colorMode: 'gradient',
