@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Closed Loop Wallboard Sankey Diagram - BPE</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+<body>
+  <div id="sankey" style="width: 100%; height: 100%;"></div>
+  <script type="text/javascript">
+    google.charts.load('current', {
+      'packages': ['sankey']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'From');
+      data.addColumn('string', 'To');
+      data.addColumn('number', 'Million Metric Tons Per Year');
+      data.addRows([
+        // // ['C&D Waste', 'Other', 10.8],
+        // // ['C&D Waste', 'Waste Wallboard', 1.2],
+        // ['Waste Wallboard', 'Wallboard Trim Scrap', 0.72],
+        // ['Waste Wallboard', 'Demolition and Renovation Wallboard', 0.48],
+        // ['Wallboard Trim Scrap', 'New Wallboard', 0.1],
+        // ['Wallboard Trim Scrap', 'Soil Amendment', 0.1],
+        // ['Demolition and Renovation Wallboard', 'Cement Manufacturing', 0.1],
+        // ['Wallboard Trim Scrap', 'Landfill', 0.52],
+        // ['Demolition and Renovation Wallboard', 'Landfill', 0.38],
+
+        // nyc
+        ['Waste Wallboard', 'Wallboard Trim Scrap', 0.33],
+        ['Waste Wallboard', 'Demolition and Renovation Wallboard', 0.22],
+        ['Wallboard Trim Scrap', 'Recovered', 0.035],
+        ['Recovered', 'New Wallboard', 0.005],
+        ['Recovered', 'Soil Amendment', 0.03],
+        // ['Demolition and Renovation Wallboard', 'Cement Manufacturing', 0.1],
+        ['Wallboard Trim Scrap', 'Landfill', 0.295],
+        ['Demolition and Renovation Wallboard', 'Landfill', 0.22],
+      ]);
+
+      // Sets chart options.
+      var colors = [
+        // // '#555',
+        // // '#555',
+        // '#0BD1AE',
+        // '#ec7c04',
+        // '#ec7c04',
+        // '#ec7c04',
+        // '#ec7c04',
+        // '#ec7c04',
+        // '#555',
+        // '#555',
+
+        // NYC
+        '#0BD1AE',
+        '#ec7c04',
+        '#ec7c04',
+        '#ec7c04',
+        '#ec7c04',
+        '#ec7c04',
+        '#555',
+        '#555',
+      ];
+
+      var options = {
+        height: 400,
+        sankey: {
+          node: {
+            colors: colors,
+            fontName: 'proxima-nova'
+          },
+          link: {
+            colorMode: 'gradient',
+            colors: colors
+          }
+        }
+      };
+
+      // Instantiates and draws our chart, passing in some options.
+      var chart = new google.visualization.Sankey(document.getElementById('sankey'));
+      chart.draw(data, options);
+    }
+  </script>
+</body>
+
+</html>

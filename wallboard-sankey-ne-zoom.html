@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Closed Loop Wallboard Sankey Diagram - BPE</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <!-- <script type="text/javascript" src="http://livejs.com/live.js"></script> -->
+</head>
+
+<body>
+  <div class="container-fluid" style="margin-top: 1em">
+    <h3>Waste Wallboard flows in the NE Diagram</h3>
+
+    <div id="sankey" style="width: 100%; height: 100%;"></div>
+
+    <div class="row" style="margin-top: 1em">
+      <ul>
+        <li>(1) NEWMOA, 2010: "Promoting Greater Recycling of Gypsum Wallboard from Construction and Demolition (C&D) Projects in the Northeast."</li>
+        <!-- <li>(*2) Estimated, considering that trim scraps are on average 10% of new wallboard used in jobsites.</li> -->
+        <li>(*3) Estimated, considering 71% of trim scraps and C&D wallboard going to landfill. CDRA, 2017: "Benefits of Construction and Demolition Debris Recycling in the US."</li>
+        <!-- <li>(*4) Estimated, considering 9% of mixed C&D to be fines. CDRA, 2017.</li> -->
+      </ul>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    google.charts.load('current', {
+      'packages': ['sankey']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'From');
+      data.addColumn('string', 'To');
+      data.addColumn('number', 'Million Metric Tons Per Year');
+      data.addRows([
+        ['Waste Wallboard', 'New Wallboard Trim Scrap (1)', 0.72],
+        ['Waste Wallboard', 'Demolition and Renovation Wallboard (1)', 0.48],
+        // ['New Walboard (*2)', 'Used in Construction & Renovation', 7.2],
+        // ['Used in Construction & Renovation', 'Waste Wallboard', 0.72],
+        // ['All Materials', 'Waste Wallboard', 0.48],
+        // ['All Materials', 'Demolition and Renovation Wallboard (1)', 0.48],
+        // ['Waste Wallboard', 'New Wallboard Trim Scrap (1)', 0.72],
+        // ['Used in Construction & Renovation', 'New Wallboard Trim Scrap (1)', 0.72],
+        // ['Waste Wallboard', 'Demolition and Renovation Wallboard (1)', 0.48],
+        ['New Wallboard Trim Scrap (1)', 'New Wallboard (*3)', 0.12],
+        ['New Wallboard Trim Scrap (1)', 'Soil Amendment (*3)', 0.12],
+        ['Demolition and Renovation Wallboard (1)', 'Cement Manufacturing (*3)', 0.12],
+        ['New Wallboard Trim Scrap (1)', 'Landfill (*3)', 0.48],
+        ['Demolition and Renovation Wallboard (1)', 'Landfill (*3)', 0.36],
+        // ['All Materials', 'Fines (*4)', 0.95],
+      ]);
+
+      // Sets chart options.
+      var colors = [
+        '#555',
+        '#0BD1AE',
+        '#0BD1AE',
+        '#ec7c04',
+        '#ec7c04',
+        '#ec7c04',
+        '#555',
+      ];
+
+      var options = {
+        height: 600,
+        sankey: {
+          node: {
+            colors: colors,
+            nodePadding: 10,
+            label: {
+              fontName: 'sans serif',
+              fontSize: 14,
+            }
+          },
+          link: {
+            colorMode: 'gradient',
+            colors: colors
+          }
+        }
+      };
+
+      // Instantiates and draws our chart, passing in some options.
+      var chart = new google.visualization.Sankey(document.getElementById('sankey'));
+      chart.draw(data, options);
+    }
+  </script>
+</body>
+</html>
