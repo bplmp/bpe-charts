@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Closed Loop Wallboard Sankey Diagram - BPE</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <!-- <script type="text/javascript" src="http://livejs.com/live.js"></script> -->
+</head>
+
+<body>
+  <div class="container-fluid" style="margin-top: 1em">
+    <h3>Waste Wallboard Flows - US</h3>
+
+    <div class="row">
+      <div class="col">
+        <h4>Current Scenario</h4>
+        <div id="sankey-current" style="width: 100%; height: 100%;"></div>
+      </div>
+      <div class="col">
+        <h4>Potential Scenario</h4>
+        <div id="sankey-potential" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 1em">
+      <ul>
+        <li>(1) CDRA, 2017: "Benefits of Construction and Demolition Debris Recycling in the US." Considering 71% of trim scraps and C&D wallboard going to landfill, same report.</li>
+        <li>(2) Considering 2019 US production of wallboard of 24,000 million square feet (USGS, 2019); wallboard density of 1.6 pounds per square foot for a 1/2" thickness board. This would mean 17.4 million metric tons of new wallboard produced per year, 10% of that being scraps.</li>
+        <li>(*3) Estimated, considering gypsum in C&D fines to be proportional to quantity of gypsum drywall in all C&D, and considering that all gypum fines are going to landfill. CDRA, 2017.</li>
+        <li>(*4) Estimated, considering a 50/50 split in recycled trim scraps between new wallboard and soil amendment. Total quantity of new wallboard recycled from USGS, 2019.</li>
+        <li>(*5) Estimated, considering that up to 15% of new wallboard could be made of post-consumer material. Total quantity of new wallboard from USGS, 2019.</li>
+        <li>(*6) Estimated, considering that up to 5% of new cement could be made of post-consumer gypsum. Total quantity of new wallboard from USGS, 2019.</li>
+        <li>(*7) Estimated, considering 3.49 million tons of gypsum used in soil amendment. CDRA, 2017.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    google.charts.load('current', {
+      'packages': ['sankey']
+    });
+    google.charts.setOnLoadCallback(drawAllCharts);
+
+    var k = {
+      'wallboard_produced': {
+        'total': 17.4,  // usgs, 2019
+        'pct_potential_post_consumer': 0.15  // amanda
+      },
+      'wallboard_trim_scrap': {
+        'pct_of_produced': 0.1,  // amanda
+        'recycled': 0.7,  // usgs, 2019
+      },
+      'jobsite_wallboard': {
+        'pct_scraps': 0.1, // amanda
+      },
+      'cnd_wallboard': {
+        'total': 13.5,  // cdra, 2017
+        'landfill_pct': 0.71,  // cdra, 2017
+        'pct_recycled_soil_amendment': 3.49 / 3.9, // cdra, 2017
+        'pct_recycled_new_wallboard': 0.41 / 3.9, // cdra, 2017
+      },
+      'cnd': {
+        'total': 164,  // cdra, 2017
+        'wallboard': 15.1,  // cdra, 2017
+      },
+      'cement': {
+        'total': 86,  // usgs, 2019
+        'pct_potential_gypsum': 0.05,  // amanda
+      },
+      'soil_amendment': {
+        // 'total_gypsum': 2.4,  // terry weaver, 2015
+        'total_gypsum': 3.49,  // cdra, 2017
+      },
+    }
+
+    var rowsCurrent = [
+      ['Gypsum Fines from C&D (*3)', 'Landfill', k.cnd.wallboard * (k.cnd_wallboard.total / k.cnd.total)],
+      ['New Wallboard Trim Scrap (2)', 'Landfill', (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced) - k.wallboard_trim_scrap.recycled],
+      ['New Wallboard Trim Scrap (2)', 'New Wallboard (*4)', k.wallboard_trim_scrap.recycled / 2],
+      ['New Wallboard Trim Scrap (2)', 'Soil Amendment (*4)', k.wallboard_trim_scrap.recycled / 2],
+      ['Demolition and Renovation Wallboard (1)', 'Soil Amendment (*4)', (k.cnd_wallboard.total * (1 - k.cnd_wallboard.landfill_pct)) * k.cnd_wallboard.pct_recycled_soil_amendment],
+      ['Demolition and Renovation Wallboard (1)', 'New Wallboard (*4)', (k.cnd_wallboard.total * (1 - k.cnd_wallboard.landfill_pct)) * k.cnd_wallboard.pct_recycled_new_wallboard],
+      ['Demolition and Renovation Wallboard (1)', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
+    ]
+    var colorsCurrent = [
+      '#555',
+      '#ec7c04',
+      '#555',
+      '#0BD1AE',
+      '#0BD1AE',
+      '#555',
+      '#0BD1AE',
+      '#ec7c04',
+    ];
+
+    var rowsPotential = [
+      ['Demolition and Renovation Wallboard (1)', 'Potential Soil Amendment (*7)', k.soil_amendment.total_gypsum],
+      ['Demolition and Renovation Wallboard (1)', 'Potential Cement Manufacturing (*6)', (k.cement.total * k.cement.pct_potential_gypsum)],
+      ['Demolition and Renovation Wallboard (1)', 'Potential New Wallboard (*5)', (k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer) - (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced)],
+      ['Demolition and Renovation Wallboard (1)', 'Landfill', k.cnd_wallboard.total -
+        (k.cement.total * k.cement.pct_potential_gypsum)
+        - k.soil_amendment.total_gypsum -
+        ((k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer) - (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced))],
+      ['New Wallboard Trim Scrap (2)', 'Potential New Wallboard (*5)', (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced)],
+      ['Gypsum Fines from C&D (*3)', 'Landfill', k.cnd.wallboard * (k.cnd_wallboard.total / k.cnd.total)],
+    ]
+    var colorsPotential = [
+      '#555',
+      '#0BD1AE',
+      '#0BD1AE',
+      '#0BD1AE',
+      '#ec7c04',
+      '#555',
+      '#555',
+      '#0BD1AE',
+      '#555',
+    ];
+
+    function drawChart(id, rows, colors) {
+      // round numbers
+      for (var i = 0; i < rows.length; i++) {
+        rows[i][2] = parseFloat(rows[i][2].toFixed(2))
+      }
+
+      // // add labels
+      // var labels = {}
+      // for (var i = 0; i < rows.length; i++) {
+      //   var from = rows[i][0]
+      //   var to = rows[i][1]
+      //   var quantity = rows[i][2]
+      //   if (labels[from]) {
+      //     labels[from] += quantity
+      //   } else {
+      //     labels[from] = quantity
+      //   }
+      //   if (labels[to]) {
+      //     labels[to] += quantity
+      //   } else {
+      //     labels[to] = quantity
+      //   }
+      // }
+      // for (var k in labels) {
+      //   if (labels.hasOwnProperty(k)) {
+      //     var quantity = parseFloat(labels[k].toFixed(2))
+      //     labels[k] = k + ' [' + quantity + ']';
+      //   }
+      // }
+      // for (var i = 0; i < rows.length; i++) {
+      //   var from = rows[i][0]
+      //   var to = rows[i][1]
+      //   rows[i][0] = labels[from]
+      //   rows[i][1] = labels[to]
+      // }
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'From');
+      data.addColumn('string', 'To');
+      data.addColumn('number', 'Million Metric Tons Per Year');
+      data.addRows(rows);
+
+      var options = {
+        height: 600,
+        sankey: {
+          node: {
+            colors: colors,
+            nodePadding: 10,
+            label: {
+              fontName: 'sans serif',
+              fontSize: 14,
+            }
+          },
+          link: {
+            colorMode: 'gradient',
+            colors: colors
+          }
+        }
+      };
+
+      // Instantiates and draws our chart, passing in some options.
+      var chart = new google.visualization.Sankey(document.getElementById(id));
+      chart.draw(data, options);
+    }
+
+    function drawAllCharts() {
+      drawChart('sankey-current', rowsCurrent, colorsCurrent)
+      drawChart('sankey-potential', rowsPotential, colorsPotential)
+    }
+  </script>
+</body>
+</html>
