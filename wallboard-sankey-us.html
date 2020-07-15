@@ -13,6 +13,15 @@
   <div class="container-fluid" style="margin-top: 1em">
     <h3>Waste Wallboard Flows - US</h3>
 
+    <!-- <div class="row">
+      <div class="col">
+      </div>
+      <div class="col">
+        <p>Post consumer content in Wallboard: <span id="postConsumerOut"></span>%</p>
+        <input id="postConsumerSlider" type="range" min="15" max="30" value="15">
+      </div>
+    </div> -->
+
     <div class="row">
       <div class="col">
         <h4>Current Scenario</h4>
@@ -50,30 +59,54 @@
     var k = {
       'wallboard_produced': {
         'total': 25.2,  // usgs, 2019
-        'pct_potential_post_consumer': 0.15  // amanda
+        'pct_potential_post_consumer': 0.15,  // amanda
+        get potential_post_consumer() {
+          return k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer
+        }
       },
-      'wallboard_trim_scrap': {
+      'wallboard_out_of_spec': {
         'pct_of_produced': 0.1,  // amanda
         'recycled': 0.7,  // usgs, 2019
+        get total() {
+            return k.wallboard_produced.total * k.wallboard_out_of_spec.pct_of_produced
+        }
       },
-      'jobsite_wallboard': {
+      'jobsite_wallboard_scraps': {
         'pct_scraps': 0.1, // amanda
+        get total() {
+          return k.wallboard_produced.total * (1 - k.wallboard_out_of_spec.pct_of_produced) * k.jobsite_wallboard_scraps.pct_scraps
+        }
       },
       'cnd_wallboard': {
-        'total': 13.5,  // cdra, 2017
+        // 'total': 13.5,  // cdra, 2017
+        get total() {
+          return 13.5 - k.jobsite_wallboard_scraps.total
+        },
         'landfill_pct': 0.71,  // cdra, 2017
         'pct_recycled_soil_amendment': 3.49 / 3.9, // cdra, 2017
         'pct_recycled_new_wallboard': 0.41 / 3.9, // cdra, 2017
-        'pct_landfilled_wallboard_is_pre_1990s': 1.0  // in our new scenario, we can assume that everything going to landfill is pre 1990's demolition wallboard
+        'pct_landfilled_wallboard_is_pre_1990s': 1.0,  // in our new scenario, we can assume that everything going to landfill is pre 1990's demolition wallboard
+        get not_landfilled() {
+          return k.cnd_wallboard.total * (1 - k.cnd_wallboard.landfill_pct)
+        }
       },
       'cnd': {
         'total': 164,  // cdra, 2017
         'wallboard': 15.1,  // cdra, 2017
         'gypsum_fines_reduction_factor': 0.9,  // we can greatly reduce fines if we source separate GWB
+        get percent_wallboard_in_cnd() {
+          return k.cnd.wallboard / k.cnd.total
+        },
+        get gypsum_fines() {
+          return k.cnd.wallboard * k.cnd.percent_wallboard_in_cnd
+        }
       },
       'cement': {
         'total': 86,  // usgs, 2019
         'pct_potential_gypsum': 0.05,  // amanda
+        get potential_gypsum() {
+          return k.cement.total * k.cement.pct_potential_gypsum
+        }
       },
       'soil_amendment': {
         // 'total_gypsum': 2.4,  // terry weaver, 2015
@@ -81,15 +114,20 @@
       },
     }
 
-    var rowsCurrent = [
-      ['Gypsum Fines from C&D (3)', 'Landfill', k.cnd.wallboard * (k.cnd_wallboard.total / k.cnd.total)],
-      ['New Wallboard Trim Scrap (2)', 'Landfill', (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced) - k.wallboard_trim_scrap.recycled],
-      ['New Wallboard Trim Scrap (2)', 'New Wallboard (4)', k.wallboard_trim_scrap.recycled / 2],
-      ['New Wallboard Trim Scrap (2)', 'Soil Amendment (4)', k.wallboard_trim_scrap.recycled / 2],
-      ['Demolition and Renovation Wallboard (1)', 'Soil Amendment (4)', (k.cnd_wallboard.total * (1 - k.cnd_wallboard.landfill_pct)) * k.cnd_wallboard.pct_recycled_soil_amendment],
-      ['Demolition and Renovation Wallboard (1)', 'New Wallboard (4)', (k.cnd_wallboard.total * (1 - k.cnd_wallboard.landfill_pct)) * k.cnd_wallboard.pct_recycled_new_wallboard],
-      ['Demolition and Renovation Wallboard (1)', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
-    ]
+    function rowsCurrent(k) {
+      return [
+        ['Gypsum Fines from C&D (3)', 'Landfill', k.cnd.gypsum_fines],
+        ['New Wallboard (Out of Spec) (2)', 'Landfill', k.wallboard_out_of_spec.total - k.wallboard_out_of_spec.recycled],
+        ['New Wallboard (Out of Spec) (2)', 'New Wallboard (4)', k.wallboard_out_of_spec.recycled / 2],
+        ['New Wallboard (Out of Spec) (2)', 'Soil Amendment (4)', k.wallboard_out_of_spec.recycled / 2],
+        ['Demolition and Renovation Wallboard (1)', 'Soil Amendment (4)', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
+        ['Demolition and Renovation Wallboard (1)', 'New Wallboard (4)', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
+        ['Demolition and Renovation Wallboard (1)', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
+        ['Jobsite Wallboard Trim Scrap', 'New Wallboard (4)', k.jobsite_wallboard_scraps.total / 4],
+        ['Jobsite Wallboard Trim Scrap', 'Soil Amendment (4)', k.jobsite_wallboard_scraps.total / 4],
+        ['Jobsite Wallboard Trim Scrap', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
+      ]
+    }
     var colorsCurrent = [
       '#555',
       '#ec7c04',
@@ -97,40 +135,66 @@
       '#0BD1AE',
       '#0BD1AE',
       '#555',
+      '#555',
       '#0BD1AE',
-      '#ec7c04',
     ];
 
-    var rowsPotential = [
-      ['New Wallboard Trim Scrap (2)', 'Potential New Wallboard (5)', (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced)],
-      ['Demolition and Renovation Wallboard (1)', 'Potential New Wallboard (5)', (k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer) - (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced)],
-      ['Demolition and Renovation Wallboard (1)', 'Potential Soil Amendment (7)', k.soil_amendment.total_gypsum],
-      ['Demolition and Renovation Wallboard (1)', 'Potential Cement Manufacturing (6)', (k.cement.total * k.cement.pct_potential_gypsum)],
-      ['Demolition and Renovation Wallboard (1)', 'Landfill (8)', k.cnd_wallboard.total -
-        (k.cement.total * k.cement.pct_potential_gypsum)
-        - k.soil_amendment.total_gypsum -
-        ((k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer) - (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced))],
-      // ['Pre 1990\'s Wallboard (8)', 'Landfill', k.cnd_wallboard.pct_landfilled_wallboard_is_pre_1990s * (
-      //   k.cnd_wallboard.total -
-      //     (k.cement.total * k.cement.pct_potential_gypsum)
-      //     - k.soil_amendment.total_gypsum -
-      //     ((k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer) - (k.wallboard_produced.total * k.wallboard_trim_scrap.pct_of_produced))
-      // )],
-      ['Gypsum Fines from C&D (3)', 'Landfill (8)', (k.cnd.wallboard * (k.cnd_wallboard.total / k.cnd.total)) * (1 - k.cnd.gypsum_fines_reduction_factor)],
-    ]
+    k.potential = {
+      get out_of_spec_to_new_wallboard() {
+        return k.wallboard_out_of_spec.total
+      },
+      get trim_scrap_to_new_wallboard() {
+        return k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total
+      },
+      get trim_scrap_to_soil_amendment() {
+        return k.jobsite_wallboard_scraps.total - this.trim_scrap_to_new_wallboard
+      },
+      get cnd_to_soil_amendment() {
+        return k.soil_amendment.total_gypsum - this.trim_scrap_to_soil_amendment
+      },
+      get cnd_to_cement_manufacturing() {
+        return k.cement.potential_gypsum
+      },
+      get cnd_to_landfill() {
+        return k.cnd_wallboard.total - this.cnd_to_soil_amendment - this.cnd_to_cement_manufacturing
+      },
+      get gypsum_fines_to_landfill() {
+        return k.cnd.gypsum_fines * (1 - k.cnd.gypsum_fines_reduction_factor)
+      },
+    }
+
+    function rowsPotential(k) {
+        return [
+          ['New Wallboard (Out of Spec) (2)', 'Potential New Wallboard (5)', k.potential.out_of_spec_to_new_wallboard],
+          ['Jobsite Wallboard Trim Scrap', 'Potential New Wallboard (5)', k.potential.trim_scrap_to_new_wallboard],
+          ['Jobsite Wallboard Trim Scrap', 'Potential Soil Amendment (7)', k.potential.trim_scrap_to_soil_amendment],
+          // ['Demolition and Renovation Wallboard (1)', 'Potential New Wallboard (5)', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
+          ['Demolition and Renovation Wallboard (1)', 'Potential Soil Amendment (7)', k.potential.cnd_to_soil_amendment],
+          ['Demolition and Renovation Wallboard (1)', 'Potential Cement Manufacturing (6)', k.potential.cnd_to_cement_manufacturing],
+          ['Demolition and Renovation Wallboard (1)', 'Landfill (8)', k.potential.cnd_to_landfill],
+          // ['Pre 1990\'s Wallboard (8)', 'Landfill', k.cnd_wallboard.pct_landfilled_wallboard_is_pre_1990s * (
+          //   k.cnd_wallboard.total -
+          //     (k.cement.total * k.cement.pct_potential_gypsum)
+          //     - k.soil_amendment.total_gypsum -
+          //     (k.wallboard_produced.potential_post_consumer - (k.wallboard_out_of_spec.total))
+          // )],
+          ['Gypsum Fines from C&D (3)', 'Landfill (8)', k.potential.gypsum_fines_to_landfill],
+        ]
+    }
     var colorsPotential = [
       '#555',
       '#0BD1AE',
       '#555',
       '#0BD1AE',
+      '#555',
       '#0BD1AE',
       '#ec7c04',
       '#555',
       '#555',
-      '#0BD1AE',
     ];
 
     function drawChart(id, rows, colors, addLabels) {
+      console.log(id, rows);
       // round numbers
       for (var i = 0; i < rows.length; i++) {
         rows[i][2] = parseFloat(rows[i][2].toFixed(2))
@@ -199,9 +263,21 @@
     }
 
     function drawAllCharts() {
-      drawChart('sankey-current', rowsCurrent, colorsCurrent, false)
-      drawChart('sankey-potential', rowsPotential, colorsPotential, false)
+      drawChart('sankey-current', rowsCurrent(k), colorsCurrent, false)
+      drawChart('sankey-potential', rowsPotential(k), colorsPotential, false)
     }
+
+    // // sliders
+    // var slider = document.getElementById("postConsumerSlider");
+    // var output = document.getElementById("postConsumerOut");
+    // output.innerHTML = slider.value;
+    //
+    // slider.oninput = function() {
+    //   var val = this.value
+    //   output.innerHTML = val
+    //   k.wallboard_produced.pct_potential_post_consumer = val / 100
+    //   drawChart('sankey-potential', rowsPotential(k), colorsPotential, false)
+    // }
   </script>
 </body>
 </html>
