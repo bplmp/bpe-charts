@@ -36,6 +36,7 @@
     <div class="row" style="margin-top: 1em">
       <div class="col">
         <ul>
+          <p><i>Click or tap on the diagram for quantities</i></p>
           <li>(1) <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>: "Benefits of Construction and Demolition Debris Recycling in the US." Considering 71% of trim scraps and C&D wallboard going to landfill, same report.</li>
           <li>(2) Considering 2019 US production of wallboard of 24,000 million square feet (<a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>); wallboard density of 0.00105 tons per square foot for a 5/8" thickness board (<a href="https://www.buildingproductecosystems.org/s/City-of-Napa_Conversion-Sheet.pdf" target="_blank">City of Napa</a>). This would mean 25.2 million metric tons of new wallboard produced per year, 10% of that being scraps.</li>
           <li>(3) Considering gypsum in C&D fines to be proportional to quantity of gypsum drywall in all C&D, and considering that all gypum fines are going to landfill. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>. In a potential scenario, we could greatly reduce fines (considering 90% reduction) in C&D by source-separating Gypsum Wallboard.</li>
@@ -43,7 +44,8 @@
           <li>(5) Considering that up to 15% of new wallboard could be made of post-consumer material. Total quantity of new wallboard from <a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>.</li>
           <li>(6) Considering that up to 5% of new cement could be made of post-consumer gypsum. Total quantity of new wallboard from <a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>.</li>
           <li>(7) Considering 3.49 million tons of gypsum used in soil amendment. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>.</li>
-          <li>(8) Pre 1990's wallboard should be landfilled unless tested negative for abestos. We are unsure of the current percentage of pre 1990's wallboard in C&D material today, so we assume that in a potential scenario all of the wallboard that has to be landfilled is from this time period.</li>
+          <!-- <li>(8) Pre 1990's wallboard should be landfilled unless tested negative for abestos. We are unsure of the current percentage of pre 1990's wallboard in C&D material today, so we assume that in a potential scenario all of the wallboard that has to be landfilled is from this time period.</li> -->
+          <li>(8) Considering that 10% of wallboard used in jobsites becomes trim scraps.</li>
           <p>Note: these are our best estimates, based on the most recent available data.</p>
         </ul>
       </div>
@@ -123,9 +125,9 @@
         ['Demolition and Renovation Wallboard (1)', 'Soil Amendment (4)', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
         ['Demolition and Renovation Wallboard (1)', 'New Wallboard (4)', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
         ['Demolition and Renovation Wallboard (1)', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
-        ['Jobsite Wallboard Trim Scrap', 'New Wallboard (4)', k.jobsite_wallboard_scraps.total / 4],
-        ['Jobsite Wallboard Trim Scrap', 'Soil Amendment (4)', k.jobsite_wallboard_scraps.total / 4],
-        ['Jobsite Wallboard Trim Scrap', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
+        ['Jobsite Wallboard Trim Scrap (8)', 'New Wallboard (4)', k.jobsite_wallboard_scraps.total / 4],
+        ['Jobsite Wallboard Trim Scrap (8)', 'Soil Amendment (4)', k.jobsite_wallboard_scraps.total / 4],
+        ['Jobsite Wallboard Trim Scrap (8)', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
       ]
     }
     var colorsCurrent = [
@@ -166,8 +168,8 @@
     function rowsPotential(k) {
         return [
           ['New Wallboard (Out of Spec) (2)', 'Potential New Wallboard (5)', k.potential.out_of_spec_to_new_wallboard],
-          ['Jobsite Wallboard Trim Scrap', 'Potential New Wallboard (5)', k.potential.trim_scrap_to_new_wallboard],
-          ['Jobsite Wallboard Trim Scrap', 'Potential Soil Amendment (7)', k.potential.trim_scrap_to_soil_amendment],
+          ['Jobsite Wallboard Trim Scrap (8)', 'Potential New Wallboard (5)', k.potential.trim_scrap_to_new_wallboard],
+          ['Jobsite Wallboard Trim Scrap (8)', 'Potential Soil Amendment (7)', k.potential.trim_scrap_to_soil_amendment],
           // ['Demolition and Renovation Wallboard (1)', 'Potential New Wallboard (5)', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
           ['Demolition and Renovation Wallboard (1)', 'Potential Soil Amendment (7)', k.potential.cnd_to_soil_amendment],
           ['Demolition and Renovation Wallboard (1)', 'Potential Cement Manufacturing (6)', k.potential.cnd_to_cement_manufacturing],
