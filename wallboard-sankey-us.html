@@ -48,10 +48,10 @@
           <p><i>Click or tap on the diagram for quantities</i></p>
           <li>These are our best estimates, based on the most recent available data; quantities are approximate.</li>
           <li>Much of the thinking behind these diagrams was informed by this <a href="http://www.newmoa.org/solidwaste/GypsumWallboardRecyclingWhitePaperFinal9-17-10.pdf" target="_blank">NEWMOA Whitepaper</a>: "Promoting Greater Recycling of Gypsum Wallboard from Construction and Demolition (C&D) Projects in the Northeast."</li>
-          <li>(1) Includes wallboard from renovations. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>: "Benefits of Construction and Demolition Debris Recycling in the US." Considering 71% of trim scraps and C&D wallboard going to landfill, same report.</li>
+          <li>(1) Includes wallboard from renovations. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>: "Benefits of Construction and Demolition Debris Recycling in the US." Considering 73% C&D wallboard going to landfill (excluding trim scraps), same report.</li>
           <li>(2) Considering 2019 US production of wallboard of 24,000 million square feet (<a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>); wallboard density of 0.00105 tons per square foot for a 5/8" thickness board (<a href="https://www.buildingproductecosystems.org/s/City-of-Napa_Conversion-Sheet.pdf" target="_blank">City of Napa</a>). This would mean 25.2 million metric tons of new wallboard produced per year, 10% of that being scraps.</li>
           <li>(3) Considering gypsum in C&D fines to be proportional to quantity of gypsum drywall in all C&D, and considering that all gypum fines are going to landfill. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>. In a potential scenario, we could greatly reduce fines (considering 90% reduction) in C&D by source-separating Gypsum Wallboard.</li>
-          <li>(4) Considering a 50/50 split in recycled trim scraps between new wallboard and soil amendment. Total quantity of new wallboard recycled from <a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>.</li>
+          <li>(4) Considering a 50% recycling rate for trim scraps, and a 50/50 split in recycled trim scraps between new wallboard and soil amendment. Total quantity of new wallboard recycled from <a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>.</li>
           <li>(5) Considering that up to 15% of new wallboard could be made of post-consumer material. Total quantity of new wallboard from <a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>.</li>
           <li>(6) Today, the maximum percentage of post-consumer wallboard in cement is 1%, but we're considering that this figure could go up to 5%, which is the maximum percentage for gypsum in new cement. Total quantity of new wallboard from <a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>.</li>
           <li>(7) Considering 3.49 million tons of gypsum used in soil amendment. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>.</li>
@@ -94,9 +94,21 @@
         get total() {
           return 13.5 - k.jobsite_wallboard_scraps.total
         },
-        'landfill_pct': 0.71,  // cdra, 2017
-        'pct_recycled_soil_amendment': 3.49 / 3.9, // cdra, 2017
-        'pct_recycled_new_wallboard': 0.41 / 3.9, // cdra, 2017
+        'recycled_soil_amendment': 3.49,  // cdra, 2017
+        // 'recycled_new_wallboard': 0.41,  // cdra, 2017
+        'recycled_new_wallboard': 0.00,  // cdra, 2017, but we're changing this to zero since the cnd wallboard that get's recycled into new wallboard is all trim scraps
+        get total_recycled() {
+          return k.cnd_wallboard.recycled_new_wallboard + k.cnd_wallboard.recycled_soil_amendment
+        },
+        get landfill_pct() {
+          return 1 - (k.cnd_wallboard.total_recycled / k.cnd_wallboard.total) // cdra, 2017, we're changing this to exclude trim scraps
+        },
+        get pct_recycled_soil_amendment() {
+          return k.cnd_wallboard.recycled_soil_amendment / k.cnd_wallboard.total_recycled
+        },
+        get pct_recycled_new_wallboard() {
+          return k.cnd_wallboard.recycled_new_wallboard / k.cnd_wallboard.total_recycled
+        },
         'pct_landfilled_wallboard_is_pre_1990s': 1.0,  // in our new scenario, we can assume that everything going to landfill is pre 1990's demolition wallboard
         get not_landfilled() {
           return k.cnd_wallboard.total * (1 - k.cnd_wallboard.landfill_pct)
@@ -132,8 +144,8 @@
         ['New Wallboard (Out of Spec) ⁽²⁾', 'Landfill', k.wallboard_out_of_spec.total - k.wallboard_out_of_spec.recycled],
         ['New Wallboard (Out of Spec) ⁽²⁾', 'New Wallboard ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
         ['New Wallboard (Out of Spec) ⁽²⁾', 'Soil Amendment ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
-        ['Demolition Wallboard ⁽¹⁾', 'Soil Amendment ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
-        ['Demolition Wallboard ⁽¹⁾', 'New Wallboard ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
+        ['Demolition Wallboard ⁽¹⁾', 'Soil Amendment ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
+        ['Demolition Wallboard ⁽¹⁾', 'New Wallboard ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
         ['Demolition Wallboard ⁽¹⁾', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
         ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'New Wallboard ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
         ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Soil Amendment ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
@@ -238,7 +250,7 @@
         for (var k in labels) {
           if (labels.hasOwnProperty(k)) {
             if (usePercentage) {
-              var quantity = parseFloat(((labels[k] / total) * 100).toFixed(1))
+              var quantity = parseFloat(((labels[k] / total) * 100).toFixed(0))
               labels[k] = k + ' [' + quantity + '%]';
             } else {
               var quantity = parseFloat(labels[k].toFixed(2))
