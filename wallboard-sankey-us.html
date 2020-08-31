@@ -118,16 +118,16 @@
 
     function rowsCurrent(k) {
       return [
-        ['Gypsum Fines from C&D (3)', 'Landfill', k.cnd.gypsum_fines],
-        ['New Wallboard (Out of Spec) (2)', 'Landfill', k.wallboard_out_of_spec.total - k.wallboard_out_of_spec.recycled],
-        ['New Wallboard (Out of Spec) (2)', 'New Wallboard (4)', k.wallboard_out_of_spec.recycled / 2],
-        ['New Wallboard (Out of Spec) (2)', 'Soil Amendment (4)', k.wallboard_out_of_spec.recycled / 2],
-        ['Demolition and Renovation Wallboard (1)', 'Soil Amendment (4)', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
-        ['Demolition and Renovation Wallboard (1)', 'New Wallboard (4)', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
-        ['Demolition and Renovation Wallboard (1)', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
-        ['Jobsite Wallboard Trim Scrap (8)', 'New Wallboard (4)', k.jobsite_wallboard_scraps.total / 4],
-        ['Jobsite Wallboard Trim Scrap (8)', 'Soil Amendment (4)', k.jobsite_wallboard_scraps.total / 4],
-        ['Jobsite Wallboard Trim Scrap (8)', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
+        ['Gypsum Fines from C&D ⁽³⁾', 'Landfill', k.cnd.gypsum_fines],
+        ['New Wallboard (Out of Spec) ⁽²⁾', 'Landfill', k.wallboard_out_of_spec.total - k.wallboard_out_of_spec.recycled],
+        ['New Wallboard (Out of Spec) ⁽²⁾', 'New Wallboard ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
+        ['New Wallboard (Out of Spec) ⁽²⁾', 'Soil Amendment ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
+        ['Demolition Wallboard ⁽¹⁾', 'Soil Amendment ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
+        ['Demolition Wallboard ⁽¹⁾', 'New Wallboard ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
+        ['Demolition Wallboard ⁽¹⁾', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
+        ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'New Wallboard ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
+        ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Soil Amendment ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
+        ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
       ]
     }
     var colorsCurrent = [
@@ -167,20 +167,20 @@
 
     function rowsPotential(k) {
         return [
-          ['New Wallboard (Out of Spec) (2)', 'Potential New Wallboard (5)', k.potential.out_of_spec_to_new_wallboard],
-          ['Jobsite Wallboard Trim Scrap (8)', 'Potential New Wallboard (5)', k.potential.trim_scrap_to_new_wallboard],
-          ['Jobsite Wallboard Trim Scrap (8)', 'Potential Soil Amendment (7)', k.potential.trim_scrap_to_soil_amendment],
-          // ['Demolition and Renovation Wallboard (1)', 'Potential New Wallboard (5)', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
-          ['Demolition and Renovation Wallboard (1)', 'Potential Soil Amendment (7)', k.potential.cnd_to_soil_amendment],
-          ['Demolition and Renovation Wallboard (1)', 'Potential Cement Manufacturing (6)', k.potential.cnd_to_cement_manufacturing],
-          ['Demolition and Renovation Wallboard (1)', 'Landfill (8)', k.potential.cnd_to_landfill],
+          ['New Wallboard (Out of Spec) ⁽²⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.out_of_spec_to_new_wallboard],
+          ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.trim_scrap_to_new_wallboard],
+          ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.trim_scrap_to_soil_amendment],
+          // ['Demolition Wallboard ⁽¹⁾', 'Potential New Wallboard ⁽⁵⁾', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
+          ['Demolition Wallboard ⁽¹⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.cnd_to_soil_amendment],
+          ['Demolition Wallboard ⁽¹⁾', 'Potential Cement Manufacturing ⁽⁶⁾', k.potential.cnd_to_cement_manufacturing],
+          ['Demolition Wallboard ⁽¹⁾', 'Landfill ⁽⁸⁾', k.potential.cnd_to_landfill],
           // ['Pre 1990\'s Wallboard (8)', 'Landfill', k.cnd_wallboard.pct_landfilled_wallboard_is_pre_1990s * (
           //   k.cnd_wallboard.total -
           //     (k.cement.total * k.cement.pct_potential_gypsum)
           //     - k.soil_amendment.total_gypsum -
           //     (k.wallboard_produced.potential_post_consumer - (k.wallboard_out_of_spec.total))
           // )],
-          ['Gypsum Fines from C&D (3)', 'Landfill (8)', k.potential.gypsum_fines_to_landfill],
+          ['Gypsum Fines from C&D ⁽³⁾', 'Landfill ⁽⁸⁾', k.potential.gypsum_fines_to_landfill],
         ]
     }
     var colorsPotential = [
