@@ -205,16 +205,21 @@
       '#555',
     ];
 
-    function drawChart(id, rows, colors, addLabels) {
+    function drawChart(id, rows, colors, addLabels, usePercentage) {
       console.log(id, rows);
       // round numbers
       for (var i = 0; i < rows.length; i++) {
         rows[i][2] = parseFloat(rows[i][2].toFixed(2))
       }
-
       if (addLabels) {
         // add labels
         var labels = {}
+        // calculate totals
+        var total = 0
+        for (var i = 0; i < rows.length; i++) {
+          var quantity = rows[i][2]
+          total += quantity
+        }
         for (var i = 0; i < rows.length; i++) {
           var from = rows[i][0]
           var to = rows[i][1]
@@ -232,8 +237,13 @@
         }
         for (var k in labels) {
           if (labels.hasOwnProperty(k)) {
-            var quantity = parseFloat(labels[k].toFixed(2))
-            labels[k] = k + ' [' + quantity + ' mi t]';
+            if (usePercentage) {
+              var quantity = parseFloat(((labels[k] / total) * 100).toFixed(1))
+              labels[k] = k + ' [' + quantity + '%]';
+            } else {
+              var quantity = parseFloat(labels[k].toFixed(2))
+              labels[k] = k + ' [' + quantity + ' mi t]';
+            }
           }
         }
         for (var i = 0; i < rows.length; i++) {
@@ -275,8 +285,8 @@
     }
 
     function drawAllCharts() {
-      drawChart('sankey-current', rowsCurrent(k), colorsCurrent, false)
-      drawChart('sankey-potential', rowsPotential(k), colorsPotential, false)
+      drawChart('sankey-current', rowsCurrent(k), colorsCurrent, true, true)
+      drawChart('sankey-potential', rowsPotential(k), colorsPotential, true, true)
     }
 
     // // sliders
