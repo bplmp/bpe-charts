@@ -11,7 +11,7 @@
 
 <body>
   <div class="container-fluid" style="margin-top: 1em">
-    <h3>Waste Wallboard Flows - US</h3>
+    <h3>Waste Wallboard Flows - US - <span style="color:red;">DRAFT</span></h3>
 
     <!-- <div class="row">
       <div class="col">
@@ -24,11 +24,11 @@
 
     <div class="row">
       <div class="col">
-        <h4>Current Scenario</h4>
+        <h4>Current gypsum resource flows in the U.S.</h4>
         <p>This diagram displays the current handling of wallboard flows in the US.</p>
       </div>
       <div class="col">
-        <h4>Potential Current Scenario</h4>
+        <h4>Potential improved gypsum resource flows, currently possible in the U.S.</h4>
         <p>This displays a potential scenario that could be achieved with changes to the current handling of wallboard.</p>
       </div>
     </div>
@@ -46,8 +46,8 @@
       <div class="col">
         <ul>
           <p><i>Click or tap on the diagram for quantities</i></p>
-          <li>These are our best estimates, based on the most recent available data; quantities are approximate.</li>
-          <li>Much of the thinking behind these diagrams was informed by this <a href="http://www.newmoa.org/solidwaste/GypsumWallboardRecyclingWhitePaperFinal9-17-10.pdf" target="_blank">NEWMOA Whitepaper</a>: "Promoting Greater Recycling of Gypsum Wallboard from Construction and Demolition (C&D) Projects in the Northeast."</li>
+          <li>These are our best estimates, based on the most recent available data; quantities are approximate. If you have data that differs, please send us an email with that data and the recommended update.</li>
+          <li>Viable end market options for gypsum were in part informed by USA Gypsum (https://www.usagypsum.com/drywall-recycling) and the NEWMOA (http://www.newmoa.org/solidwaste/GypsumWallboardRecyclingWhitePaperFinal9-17-10.pdf) Whitepaper: "Promoting Greater Recycling of Gypsum Wallboard from Construction and Demolition (C&D) Projects in the Northeast."</li>
           <li>(1) Includes wallboard from renovations. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>: "Benefits of Construction and Demolition Debris Recycling in the US." Considering 73% C&D wallboard going to landfill (excluding trim scraps), same report.</li>
           <li>(2) Considering 2019 US production of wallboard of 24,000 million square feet (<a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>); wallboard density of 0.00105 tons per square foot for a 5/8" thickness board (<a href="https://www.buildingproductecosystems.org/s/City-of-Napa_Conversion-Sheet.pdf" target="_blank">City of Napa</a>). This would mean 25.2 million metric tons of new wallboard produced per year, 10% of that being scraps.</li>
           <li>(3) Considering gypsum in C&D fines to be proportional to quantity of gypsum drywall in all C&D, and considering that all gypum fines are going to landfill. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>. In a potential scenario, we could greatly reduce fines (considering 90% reduction) in C&D by source-separating Gypsum Wallboard.</li>
@@ -141,15 +141,15 @@
     function rowsCurrent(k) {
       return [
         ['Gypsum Fines from C&D ⁽³⁾', 'Landfill', k.cnd.gypsum_fines],
-        ['New Wallboard (Out of Spec) ⁽²⁾', 'Landfill', k.wallboard_out_of_spec.total - k.wallboard_out_of_spec.recycled],
-        ['New Wallboard (Out of Spec) ⁽²⁾', 'New Wallboard ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
-        ['New Wallboard (Out of Spec) ⁽²⁾', 'Soil Amendment ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
-        ['Demolition Wallboard ⁽¹⁾', 'Soil Amendment ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
-        ['Demolition Wallboard ⁽¹⁾', 'New Wallboard ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
-        ['Demolition Wallboard ⁽¹⁾', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
-        ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'New Wallboard ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
-        ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Soil Amendment ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
-        ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
+        ['Factory Scrap (Out of Spec) ⁽²⁾', 'Landfill', k.wallboard_out_of_spec.total - k.wallboard_out_of_spec.recycled],
+        ['Factory Scrap (Out of Spec) ⁽²⁾', 'New Wallboard ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
+        ['Factory Scrap (Out of Spec) ⁽²⁾', 'Soil Amendment ⁽⁴⁾', k.wallboard_out_of_spec.recycled / 2],
+        ['Demo Scrap ⁽¹⁾', 'Soil Amendment ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_soil_amendment],
+        ['Demo Scrap ⁽¹⁾', 'New Wallboard ⁽⁴⁾', k.cnd_wallboard.not_landfilled * k.cnd_wallboard.pct_recycled_new_wallboard],
+        ['Demo Scrap ⁽¹⁾', 'Landfill', k.cnd_wallboard.total * k.cnd_wallboard.landfill_pct],
+        ['New Construction Trim Scrap ⁽⁸⁾', 'New Wallboard ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
+        ['New Construction Trim Scrap ⁽⁸⁾', 'Soil Amendment ⁽⁴⁾', k.jobsite_wallboard_scraps.total / 4],
+        ['New Construction Trim Scrap ⁽⁸⁾', 'Landfill', k.jobsite_wallboard_scraps.total / 2],
       ]
     }
     var colorsCurrent = [
@@ -189,13 +189,13 @@
 
     function rowsPotential(k) {
         return [
-          ['New Wallboard (Out of Spec) ⁽²⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.out_of_spec_to_new_wallboard],
-          ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.trim_scrap_to_new_wallboard],
-          ['Jobsite Wallboard Trim Scrap ⁽⁸⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.trim_scrap_to_soil_amendment],
-          // ['Demolition Wallboard ⁽¹⁾', 'Potential New Wallboard ⁽⁵⁾', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
-          ['Demolition Wallboard ⁽¹⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.cnd_to_soil_amendment],
-          ['Demolition Wallboard ⁽¹⁾', 'Potential Cement Manufacturing ⁽⁶⁾', k.potential.cnd_to_cement_manufacturing],
-          ['Demolition Wallboard ⁽¹⁾', 'Landfill ⁽⁸⁾', k.potential.cnd_to_landfill],
+          ['Factory Scrap (Out of Spec) ⁽²⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.out_of_spec_to_new_wallboard],
+          ['New Construction Trim Scrap ⁽⁸⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.trim_scrap_to_new_wallboard],
+          ['New Construction Trim Scrap ⁽⁸⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.trim_scrap_to_soil_amendment],
+          // ['Demo Scrap ⁽¹⁾', 'Potential New Wallboard ⁽⁵⁾', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
+          ['Demo Scrap ⁽¹⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.cnd_to_soil_amendment],
+          ['Demo Scrap ⁽¹⁾', 'Potential Cement Manufacturing ⁽⁶⁾', k.potential.cnd_to_cement_manufacturing],
+          ['Demo Scrap ⁽¹⁾', 'Landfill ⁽⁸⁾', k.potential.cnd_to_landfill],
           // ['Pre 1990\'s Wallboard (8)', 'Landfill', k.cnd_wallboard.pct_landfilled_wallboard_is_pre_1990s * (
           //   k.cnd_wallboard.total -
           //     (k.cement.total * k.cement.pct_potential_gypsum)
