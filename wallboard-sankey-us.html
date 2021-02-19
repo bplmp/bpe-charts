@@ -92,9 +92,10 @@
       'wallboard_produced': {
         'total': 25.2,  // usgs, 2019
         'pct_potential_post_consumer': 0.15,  // amanda
+        'pct_cannot_be_recycled': 0.14,  // amanda
         get potential_post_consumer() {
           return k.wallboard_produced.total * k.wallboard_produced.pct_potential_post_consumer
-        }
+        },
       },
       'wallboard_out_of_spec': {
         'pct_of_produced': 0.1,  // amanda
@@ -210,8 +211,8 @@
     function rowsPotential(k) {
         return [
           ['Factory Scrap (Out of Spec) ⁽²⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.out_of_spec_to_new_wallboard],
-          ['New Construction Trim Scrap ⁽⁸⁾', 'Potential New Wallboard ⁽⁵⁾', k.potential.trim_scrap_to_new_wallboard],
-          ['New Construction Trim Scrap ⁽⁸⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.trim_scrap_to_soil_amendment],
+          ['New Construction Trim Scrap ⁽⁸⁾', 'Potential New Wallboard ⁽⁵⁾', (k.potential.trim_scrap_to_new_wallboard) * (1 - k.wallboard_produced.pct_cannot_be_recycled)],
+          ['New Construction Trim Scrap ⁽⁸⁾', 'Potential Soil Amendment ⁽⁷⁾', (k.potential.trim_scrap_to_soil_amendment) * (1 - k.wallboard_produced.pct_cannot_be_recycled)],
           // ['Demo Scrap ⁽¹⁾', 'Potential New Wallboard ⁽⁵⁾', k.wallboard_produced.potential_post_consumer - k.wallboard_out_of_spec.total],
           ['Demo Scrap ⁽¹⁾', 'Potential Soil Amendment ⁽⁷⁾', k.potential.cnd_to_soil_amendment],
           ['Demo Scrap ⁽¹⁾', 'Potential Cement Manufacturing ⁽⁶⁾', k.potential.cnd_to_cement_manufacturing],
@@ -223,6 +224,7 @@
           //     (k.wallboard_produced.potential_post_consumer - (k.wallboard_out_of_spec.total))
           // )],
           ['Gypsum Fines from C&D ⁽³⁾', 'Landfill ⁽⁸⁾', k.potential.gypsum_fines_to_landfill],
+          ['New Construction Trim Scrap ⁽⁸⁾', 'Landfill ⁽⁸⁾', (k.potential.trim_scrap_to_new_wallboard + k.potential.trim_scrap_to_soil_amendment) * (k.wallboard_produced.pct_cannot_be_recycled)],
         ]
     }
     var colorsPotential = [
