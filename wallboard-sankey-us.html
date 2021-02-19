@@ -7,6 +7,21 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <!-- <script type="text/javascript" src="http://livejs.com/live.js"></script> -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+  <style media="screen">
+    .numbered-list {
+      margin-left: -1.5em;
+    }
+    .numbered-list > li {
+      list-style: none;
+      text-indent: -1.5em;
+      padding-left: 1.5em;
+    }
+    li {
+      margin-bottom: 0.25em;
+    }
+  </style>
 </head>
 
 <body>
@@ -48,6 +63,9 @@
           <p><i>Click or tap on the diagram for quantities</i></p>
           <li>These are our best estimates, based on the most recent available data; quantities are approximate. If you have data that differs, please send us an email with that data and the recommended update.</li>
           <li>Viable end market options for gypsum were in part informed by USA Gypsum (https://www.usagypsum.com/drywall-recycling) and the NEWMOA (http://www.newmoa.org/solidwaste/GypsumWallboardRecyclingWhitePaperFinal9-17-10.pdf) Whitepaper: "Promoting Greater Recycling of Gypsum Wallboard from Construction and Demolition (C&D) Projects in the Northeast."</li>
+          <li>Specialty board products such as fiberglass-faced, mesh embedded, mold & moisture resistant, and acoustically-enhanced represent ~14% of board produced in 2019 (USGS), are unable to be recycled, and are therefore a part of all above streams that get routed to landfill.</li>
+        </ul>
+        <ol class="numbered-list">
           <li>(1) Includes wallboard from renovations. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>: "Benefits of Construction and Demolition Debris Recycling in the US." Considering 73% C&D wallboard going to landfill (excluding trim scraps), same report.</li>
           <li>(2) Considering 2019 US production of wallboard of 24,000 million square feet (<a href="https://www.buildingproductecosystems.org/s/USGS-Gypsum-MCS_2020.pdf" target="_blank">USGS, 2020</a>); wallboard density of 0.00105 tons per square foot for a 5/8" thickness board (<a href="https://www.buildingproductecosystems.org/s/City-of-Napa_Conversion-Sheet.pdf" target="_blank">City of Napa</a>). This would mean 25.2 million metric tons of new wallboard produced per year, 10% of that being scraps.</li>
           <li>(3) Considering gypsum in C&D fines to be proportional to quantity of gypsum drywall in all C&D, and considering that all gypum fines are going to landfill. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>. In a potential scenario, we could greatly reduce fines (considering 90% reduction) in C&D by source-separating Gypsum Wallboard.</li>
@@ -57,7 +75,7 @@
           <li>(7) Considering 3.49 million tons of gypsum used in soil amendment. <a href="https://www.buildingproductecosystems.org/s/cdra_benefits_of_cd_recycling_final_revised_2017.pdf" target="_blank">CDRA, 2017</a>.</li>
           <!-- <li>(8) Pre 1990's wallboard should be landfilled unless tested negative for abestos. We are unsure of the current percentage of pre 1990's wallboard in C&D material today, so we assume that in a potential scenario all of the wallboard that has to be landfilled is from this time period.</li> -->
           <li>(8) Considering that 10% of wallboard used in jobsites becomes trim scraps.</li>
-        </ul>
+        </ol>
       </div>
     </div>
   </div>
@@ -66,7 +84,9 @@
     google.charts.load('current', {
       'packages': ['sankey']
     });
-    google.charts.setOnLoadCallback(drawAllCharts);
+    document.fonts.ready.then(function() {
+      google.charts.setOnLoadCallback(drawAllCharts);
+    })
 
     var k = {
       'wallboard_produced': {
@@ -279,7 +299,7 @@
             colors: colors,
             nodePadding: 10,
             label: {
-              fontName: 'sans serif',
+              fontName: 'Arimo',
               fontSize: 16,
             }
           },
